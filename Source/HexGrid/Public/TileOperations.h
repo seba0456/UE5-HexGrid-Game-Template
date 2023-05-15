@@ -18,5 +18,7 @@ class HEXGRID_API UTileOperations : public UBlueprintFunctionLibrary
         
     UFUNCTION(BlueprintCallable, Category = "Tile Operations", meta = (DisplayName = "Get Adjacent Tile Neighbours", Description = "A function that returns tile neighbours."))
         static TArray<FIntPoint> GetAdjacentTileNeighbours(const FIntPoint& SourceTile);
-    
+    UFUNCTION(BlueprintCallable, Category = "Tile Operations", meta = (DisplayName = "Get Patch To Tile", Description = "A function that returns array of tiles to target."))
+        static TArray<FIntPoint> FindPathAStar(const FIntPoint& Source, const FIntPoint& Target, const TMap<FIntPoint, int32>& MovementCosts);
 };
+

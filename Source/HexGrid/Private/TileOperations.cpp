@@ -2,7 +2,7 @@
 
 #include "TileOperations.h"
 #include <algorithm>
-
+#include "Algo/Reverse.h"
 
 TArray<FIntPoint> UTileOperations::GetTileNeighboursInRange(const FIntPoint& SourceTile, int Radius)
 {
@@ -65,4 +65,120 @@ TArray<FIntPoint> UTileOperations::GetAdjacentTileNeighbours(const FIntPoint& So
     }
 
     return Neighbours;
+}
+
+TArray<FIntPoint> UTileOperations::FindPathAStar(const FIntPoint& Source, const FIntPoint& Target, const TMap<FIntPoint, int32>& MovementCosts)
+{
+    // Structure representing a vertex in the graph
+    struct FNode
+    {
+        FIntPoint Position;
+        int32 GScore;
+        int32 FScore;
+        FIntPoint Parent;
+
+        FNode(const FIntPoint& InPosition, int32 InGScore, int32 InFScore, const FIntPoint& InParent)
+            : Position(InPosition), GScore(InGScore), FScore(InFScore), Parent(InParent) {}
+    };
+
+    // Checking if Source and Target are different points
+    if (Source == Target)
+    {
+        TArray<FIntPoint> EmptyPath;
+        return EmptyPath;
+    }
+
+    // List of open and closed vertices
+    TArray<FIntPoint> OpenSet;
+    TSet<FIntPoint> ClosedSet;
+
+    // Map of vertices with their FScore
+    TMap<FIntPoint, int32> FScoreMap;
+
+    // Adding Source to the list of open vertices
+    OpenSet.Add(Source);
+    FScoreMap.Add(Source, FMath::Abs(Source.X - Target.X) + FMath::Abs(Source.Y - Target.Y));
+
+    // Map of vertices with their GScore
+    TMap<FIntPoint, int32> GScoreMap;
+    GScoreMap.Add(Source, 0);
+
+    TMap<FIntPoint, FNode> FNodeMap;
+
+    // While there are still vertices to be checked
+    while (OpenSet.Num() > 0)
+    {
+        // Selecting the vertex with the lowest FScore
+        FIntPoint Current = OpenSet[0];
+        int32 LowestFScore = FScoreMap[Current];
+        for (const FIntPoint& OpenNode : OpenSet)
+        {
+            if (FScoreMap[OpenNode] < LowestFScore)
+            {
+                Current = OpenNode;
+                LowestFScore = FScoreMap[OpenNode];
+            }
+        }
+
+        // If we have reached the goal, reconstruct the path
+        if (Current == Target)
+        {
+            TArray<FIntPoint> Path;
+            while (Current != Source)
+            {
+                Path.Add(Current);
+                Current = FNodeMap[Current].Parent;
+            }
+            Path.Add(Source);
+            Algo::Reverse(Path);
+            return Path;
+        }
+
+        // Removing the current vertex from the open list
+        OpenSet.Remove(Current);
+
+        // Adding it to the closed list of vertices
+        ClosedSet.Add(Current);
+
+        // Checking neighboring vertices
+        TArray<FIntPoint> Neighbours = GetAdjacentTileNeighbours(Current);
+        for (const FIntPoint& Neighbour : Neighbours)
+        {
+            // If the neighboring vertex is already closed, we skip it
+            if (ClosedSet.Contains(Neighbour))
+            {
+                continue;
+            }
+
+            if (!MovementCosts.Contains(Neighbour))
+            {
+                continue;
+            }
+            // Calculating the GScore cost for the neighbor
+            int32 GScore = GScoreMap[Current] + MovementCosts[Neighbour];
+
+            // If the neighboring vertex is not yet open, we add it to the list of open vertices
+            if (!OpenSet.Contains(Neighbour))
+            {
+                OpenSet.Add(Neighbour);
+            }
+            // If the new GScore is higher than the previous one, we skip this neighbor
+            else if (GScore >= GScoreMap[Neighbour])
+            {
+                continue;
+            }
+
+            // Updating the GScore and FScore for the neighbor
+            GScoreMap.Add(Neighbour, GScore);
+            int32 FScore = GScore + FMath::Abs(Neighbour.X - Target.X) + FMath::Abs(Neighbour.Y - Target.Y);;
+            FScoreMap.Add(Neighbour, FScore);
+
+            // Updating the parent information for the neighbor
+            FNodeMap.Add(Neighbour, FNode(Neighbour, GScore, FScore, Current));
+        }
+    }
+
+    // If the path could not be found, we return an empty array
+    TArray<FIntPoint> EmptyPath;
+    return EmptyPath;
 }
