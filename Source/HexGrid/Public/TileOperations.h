@@ -20,5 +20,3 @@ class HEXGRID_API UTileOperations : public UBlueprintFunctionLibrary
         static TArray<FIntPoint> GetAdjacentTileNeighbours(const FIntPoint& SourceTile);
     
 };
-
-

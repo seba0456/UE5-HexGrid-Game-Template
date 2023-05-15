@@ -1,0 +1,8 @@
+
+[[actions]]
+name = "Launch UE5 project"
+path = "HexGrid.uproject"
+
+[[actions]]
+name = "Discord server"
+path = "https://discord.gg/9d6RBrhqtg"
