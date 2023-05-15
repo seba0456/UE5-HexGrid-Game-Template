@@ -4,6 +4,7 @@
 #include "TileOperations.h"
 #include <algorithm>
 
+
 TArray<FIntPoint> UTileOperations::GetTileNeighboursInRange(const FIntPoint& SourceTile, int Radius)
 {
     TArray<FIntPoint> Neighbours;
@@ -24,7 +25,7 @@ TArray<FIntPoint> UTileOperations::GetTileNeighboursInRange(const FIntPoint& Sou
         }
         Neighbours.Append(UniqueNeighbours);
     }
-
+    UE_LOG(LogTemp, Warning, TEXT("Found %d neightbours in range of %d"), Neighbours.Num(),n);
     return Neighbours;
 }
 
@@ -53,6 +54,14 @@ TArray<FIntPoint> UTileOperations::GetAdjacentTileNeighbours(const FIntPoint& So
     
     return Neighbours;
 }
+
+
+
+
+
+
+
+
 
 
 
