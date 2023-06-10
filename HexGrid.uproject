@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.1",
+	"EngineAssociation": "5.2",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -32,6 +32,11 @@
 			"SupportedTargetPlatforms": [
 				"Win64"
 			]
+		},
+		{
+			"Name": "HexagonGridNavigation",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/03c2d3e2e1314746a7d01928d090e77e"
 		}
 	]
 }
