@@ -1,2 +1,2 @@
 # Hexagon grid UE5 template
- 
+ This is demo propject for my [Hexagonal Grid Navigation Algorithm Plugin](https://www.unrealengine.com/marketplace/en-US/product/03c2d3e2e1314746a7d01928d090e77e). I'm also planning to create good Hexagonal Strategy Template. I'm still working on this project and eventualy will be transformed into much greater game. For now it is simple example how my plugin works. If you have any questions about my plugin, feel free to ask me on my [Discord Server](https://discord.com/invite/9d6RBrhqtg).
